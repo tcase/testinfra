@@ -199,6 +199,7 @@ class Socket(Module):
 
 
 class LinuxSocket(Socket):
+    register_fixture = False
 
     def get_sockets(self, listening):
         sockets = []
@@ -241,6 +242,7 @@ class LinuxSocket(Socket):
 
 
 class BSDSocket(Socket):
+    register_fixture = False
 
     def get_sockets(self, listening):
         sockets = []

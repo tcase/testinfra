@@ -112,6 +112,7 @@ class User(Module):
 
 
 class BSDUser(User):
+    register_fixture = False
 
     @property
     def password(self):

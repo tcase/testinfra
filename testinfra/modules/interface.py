@@ -55,6 +55,7 @@ class Interface(Module):
 
 
 class LinuxInterface(Interface):
+    register_fixture = False
 
     @property
     def exists(self):
@@ -77,6 +78,7 @@ class LinuxInterface(Interface):
 
 
 class BSDInterface(Interface):
+    register_fixture = False
 
     @property
     def exists(self):

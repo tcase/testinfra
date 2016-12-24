@@ -13,11 +13,22 @@
 
 from __future__ import unicode_literals
 
+import six
+
 import pytest
 
 
+class autoregister(type):
+
+    def __new__(mcs, name, bases, attrs):
+        attrs.setdefault('register_fixture', True)
+        return super(autoregister, mcs).__new__(mcs, name, bases, attrs)
+
+
+@six.add_metaclass(autoregister)
 class Module(object):
     _backend = None
+    register_fixture = False
 
     def run(self, command, *args, **kwargs):
         return self._backend.run(command, *args, **kwargs)
@@ -74,6 +85,7 @@ class Module(object):
 
 
 class InstanceModule(Module):
+    register_fixture = False
 
     @classmethod
     def get_module(cls, _backend):

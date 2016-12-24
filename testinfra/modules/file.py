@@ -186,6 +186,8 @@ class File(Module):
 
 
 class GNUFile(File):
+    register_fixture = False
+
     @property
     def user(self):
         return self.check_output("stat -c %%U %s", self.path)
@@ -228,6 +230,8 @@ class GNUFile(File):
 
 
 class BSDFile(File):
+    register_fixture = False
+
     @property
     def user(self):
         return self.check_output("stat -f %%Su %s", self.path)
@@ -270,6 +274,7 @@ class BSDFile(File):
 
 
 class NetBSDFile(BSDFile):
+    register_fixture = False
 
     @property
     def sha256sum(self):

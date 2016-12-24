@@ -13,30 +13,36 @@
 
 from __future__ import unicode_literals
 
-from testinfra.modules.ansible import Ansible
-from testinfra.modules.command import Command
-from testinfra.modules.file import File
-from testinfra.modules.group import Group
-from testinfra.modules.interface import Interface
-from testinfra.modules.mountpoint import MountPoint
-from testinfra.modules.package import Package
-from testinfra.modules.pip import PipPackage
-from testinfra.modules.process import Process
-from testinfra.modules.puppet import Facter
-from testinfra.modules.puppet import PuppetResource
-from testinfra.modules.salt import Salt
-from testinfra.modules.service import Service
-from testinfra.modules.socket import Socket
-from testinfra.modules.sudo import Sudo
-from testinfra.modules.supervisor import Supervisor
-from testinfra.modules.sysctl import Sysctl
-from testinfra.modules.systeminfo import SystemInfo
-from testinfra.modules.user import User
+import importlib
+import pkgutil
+import sys
+
+__all__ = []
 
 
-__all__ = [
-    "Command", "File", "Package", "Group", "Interface",
-    "Service", "SystemInfo", "User", "Salt", "PuppetResource",
-    "Facter", "Sysctl", "Socket", "Ansible", "Process",
-    "Supervisor", "MountPoint", "Sudo", "PipPackage",
-]
+def load():
+    """Automatically load submodules and expose relevant classes"""
+    def all_subclasses(cls):
+        subclasses = cls.__subclasses__()
+        return subclasses + [g for s in subclasses
+                             for g in all_subclasses(s)]
+    for _, name, _ in pkgutil.walk_packages(
+        __path__, prefix="testinfra.modules."
+    ):
+        importlib.import_module(name)
+
+    from testinfra.modules.base import Module
+    mod = sys.modules[__name__]
+    for cls in all_subclasses(Module):
+        if cls.register_fixture:
+            setattr(mod, cls.__name__, cls)
+            __all__.append(cls.__name__)
+load()
+del load
+
+
+def get_module(name):
+    for cname in __all__:
+        if name in (cname, cname.lower()):
+            return getattr(sys.modules[__name__], cname)
+    raise RuntimeError("module {0} not found".format(name))

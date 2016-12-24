@@ -118,6 +118,7 @@ class MountPoint(Module):
 
 
 class LinuxMountPoint(MountPoint):
+    register_fixture = False
 
     @classmethod
     def _iter_mountpoints(cls):
@@ -140,6 +141,7 @@ class LinuxMountPoint(MountPoint):
 
 
 class BSDMountPoint(MountPoint):
+    register_fixture = False
 
     @classmethod
     def _iter_mountpoints(cls):

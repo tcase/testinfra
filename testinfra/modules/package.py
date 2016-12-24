@@ -78,6 +78,7 @@ class Package(Module):
 
 
 class DebianPackage(Package):
+    register_fixture = False
 
     @property
     def is_installed(self):
@@ -99,6 +100,7 @@ class DebianPackage(Package):
 
 
 class FreeBSDPackage(Package):
+    register_fixture = False
 
     @property
     def is_installed(self):
@@ -116,6 +118,7 @@ class FreeBSDPackage(Package):
 
 
 class OpenBSDPackage(Package):
+    register_fixture = False
 
     @property
     def is_installed(self):
@@ -134,6 +137,7 @@ class OpenBSDPackage(Package):
 
 
 class RpmPackage(Package):
+    register_fixture = False
 
     @property
     def is_installed(self):

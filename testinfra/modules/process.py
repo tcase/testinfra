@@ -123,6 +123,7 @@ class Process(InstanceModule):
 
 class PosixProcess(Process):
     # Should be portable on both Linux and BSD
+    register_fixture = False
 
     def _get_processes(self, **filters):
         cmd = "ps -Aww -o %s"

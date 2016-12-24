@@ -73,6 +73,7 @@ class Service(Module):
 
 
 class SysvService(Service):
+    register_fixture = False
 
     @property
     def is_running(self):
@@ -93,6 +94,7 @@ class SysvService(Service):
 
 
 class SystemdService(SysvService):
+    register_fixture = False
 
     @property
     def is_running(self):
@@ -113,6 +115,7 @@ class SystemdService(SysvService):
 
 
 class UpstartService(SysvService):
+    register_fixture = False
 
     @property
     def is_enabled(self):
@@ -130,6 +133,7 @@ class UpstartService(SysvService):
 
 
 class FreeBSDService(Service):
+    register_fixture = False
 
     @property
     def is_running(self):
@@ -147,6 +151,7 @@ class FreeBSDService(Service):
 
 
 class OpenBSDService(Service):
+    register_fixture = False
 
     @property
     def is_running(self):
@@ -158,6 +163,7 @@ class OpenBSDService(Service):
 
 
 class NetBSDService(Service):
+    register_fixture = False
 
     @property
     def is_running(self):
