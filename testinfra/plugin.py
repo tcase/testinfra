@@ -45,7 +45,7 @@ def LocalCommand(TestinfraBackend):
 
     Note: `LocalCommand` does NOT respect ``--sudo`` option
     """
-    return testinfra.get_backend("local://").get_module("Command")
+    return testinfra.get_backend("local://").Command
 
 
 @pytest.fixture(scope="module")

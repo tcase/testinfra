@@ -189,7 +189,7 @@ class Socket(Module):
 
     @classmethod
     def get_module_class(cls, _backend):
-        SystemInfo = _backend.get_module("SystemInfo")
+        SystemInfo = _backend.SystemInfo
         if SystemInfo.type == "linux":
             return LinuxSocket
         elif SystemInfo.type.endswith("bsd"):

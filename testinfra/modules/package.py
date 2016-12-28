@@ -63,8 +63,8 @@ class Package(Module):
 
     @classmethod
     def get_module_class(cls, _backend):
-        Command = _backend.get_module("Command")
-        SystemInfo = _backend.get_module("SystemInfo")
+        Command = _backend.Command
+        SystemInfo = _backend.SystemInfo
         if SystemInfo.type == "freebsd":
             return FreeBSDPackage
         elif SystemInfo.type in ("openbsd", "netbsd"):

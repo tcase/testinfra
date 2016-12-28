@@ -38,7 +38,7 @@ BASEDIR = os.path.abspath(os.path.join(BASETESTDIR, os.pardir, os.pardir))
 _HAS_DOCKER = None
 
 # Use testinfra to get a handy function to run commands locally
-_Command = testinfra.get_backend("local://").get_module("Command")
+_Command = testinfra.get_backend("local://").Command
 check_output = _Command.check_output
 
 
@@ -193,7 +193,7 @@ def TestinfraBackend(request, tmpdir_factory):
         # Wait ssh to be up
         service = testinfra.get_backend(
             docker_id, connection="docker"
-        ).get_module("Service")
+        ).Service
 
         if image in ("centos_7", "fedora"):
             service_name = "sshd"

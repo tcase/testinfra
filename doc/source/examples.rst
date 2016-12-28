@@ -201,7 +201,7 @@ Put this code in a `conftest.py` file:
     # Use testinfra to get a handy function to run commands locally
     check_output = testinfra.get_backend(
         "local://"
-    ).get_module("Command").check_output
+    ).Command.check_output
 
 
     @pytest.fixture

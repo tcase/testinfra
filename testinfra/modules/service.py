@@ -46,9 +46,9 @@ class Service(Module):
 
     @classmethod
     def get_module_class(cls, _backend):
-        SystemInfo = _backend.get_module("SystemInfo")
-        File = _backend.get_module("File")
-        Command = _backend.get_module("Command")
+        SystemInfo = _backend.SystemInfo
+        File = _backend.File
+        Command = _backend.Command
         if SystemInfo.type == "linux":
             if (
                 Command.exists("systemctl")

@@ -107,7 +107,7 @@ class User(Module):
 
     @classmethod
     def get_module_class(cls, _backend):
-        SystemInfo = _backend.get_module("SystemInfo")
+        SystemInfo = _backend.SystemInfo
         if SystemInfo.type.endswith("bsd"):
             return BSDUser
         return super(User, cls).get_module_class(_backend)
