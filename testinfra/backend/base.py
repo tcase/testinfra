@@ -17,6 +17,7 @@ import locale
 import logging
 import pipes
 import subprocess
+import warnings
 
 import testinfra.modules
 
@@ -86,7 +87,6 @@ class BaseBackend(object):
 
     def __init__(self, hostname, sudo=False, sudo_user=None, *args, **kwargs):
         self._encoding = None
-        self._module_cache = {}
         self.hostname = hostname
         self.sudo = sudo
         self.sudo_user = sudo_user
@@ -229,7 +229,9 @@ class BaseBackend(object):
         return result
 
     def __getattr__(self, attr):
-        return self.get_module(attr)
+        module = getattr(testinfra.modules, attr).get_module(self)
+        setattr(self, attr, module)
+        return module
 
     def get_module(self, name):
         """Return the testinfra module adapted to the current backend
@@ -244,9 +246,6 @@ class BaseBackend(object):
                 Package = TestinfraBackend.get_module("Package")
 
         """
-        try:
-            module = self._module_cache[name]
-        except KeyError:
-            module = getattr(testinfra.modules, name).get_module(self)
-            self._module_cache[name] = module
-        return module
+        warnings.warn("use {0} attribute directly".format(name),
+                      category=DeprecationWarning, stacklevel=2)
+        return getattr(self, name)

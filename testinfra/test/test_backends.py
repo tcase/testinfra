@@ -90,3 +90,8 @@ def test_backend_importables():
             pytest.skip()
         obj = testinfra.backend.get_backend_class(connection_type)
         assert obj.get_connection_type() == connection_type
+
+
+def test_deprecated_warnings(TestinfraBackend):
+    with pytest.warns(DeprecationWarning):
+        TestinfraBackend.get_module("Command")
