@@ -13,8 +13,6 @@
 
 from __future__ import unicode_literals
 
-import pytest
-
 
 class Module(object):
     _backend = None
@@ -62,14 +60,6 @@ class Module(object):
     @classmethod
     def get_module_class(cls, _backend):
         return cls
-
-    @classmethod
-    def as_fixture(cls):
-        @pytest.fixture()
-        def f(TestinfraBackend):
-            return TestinfraBackend.get_module(cls.__name__)
-        f.__doc__ = cls.__doc__
-        return f
 
 
 class InstanceModule(Module):

@@ -25,7 +25,13 @@ import testinfra.modules
 def _declare_fixture():
     mod = sys.modules[__name__]
     for name in testinfra.modules.__all__:
-        setattr(mod, name, getattr(testinfra.modules, name).as_fixture())
+        def as_fixture(cls):
+            @pytest.fixture(name=cls.__name__)
+            def f(TestinfraBackend):
+                return TestinfraBackend.get_module(cls.__name__)
+            f.__doc__ = cls.__doc__
+            return f
+        setattr(mod, name, as_fixture(getattr(testinfra.modules, name)))
 
 _declare_fixture()
 
