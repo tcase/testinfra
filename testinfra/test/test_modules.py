@@ -29,6 +29,13 @@ all_images = pytest.mark.testinfra_hosts(*[
 ])
 
 
+def test_command(Command):
+    assert Command.run_expect([42], "exit 42").rc == 42
+    with pytest.raises(AssertionError) as excinfo:
+        Command.check_output("exit 42")
+    assert 'Unexpected exit code 42' in str(excinfo)
+
+
 @all_images
 def test_package(docker_image, Package):
     ssh = Package("openssh-server")

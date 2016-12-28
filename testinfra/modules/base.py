@@ -31,7 +31,8 @@ class Module(object):
         __tracebackhide__ = True  # pylint: disable=unused-variable
         out = self.run(command, *args, **kwargs)
         if out.rc not in expected:
-            pytest.fail("Unexpected exit code %s for %s" % (out.rc, out))
+            raise AssertionError(
+                "Unexpected exit code %s for %s" % (out.rc, out))
         return out
 
     def run_test(self, command, *args, **kwargs):
@@ -48,9 +49,7 @@ class Module(object):
         :raises: AssertionError
         """
         __tracebackhide__ = True  # pylint: disable=unused-variable
-        out = self.run(command, *args, **kwargs)
-        if out.rc != 0:
-            pytest.fail("Unexpected exit code %s for %s" % (out.rc, out))
+        out = self.run_expect([0], command, *args, **kwargs)
         return out.stdout.rstrip("\r\n")
 
     @classmethod
