@@ -13,30 +13,26 @@
 
 from __future__ import unicode_literals
 
-from testinfra.modules.ansible import Ansible
-from testinfra.modules.command import Command
-from testinfra.modules.file import File
-from testinfra.modules.group import Group
-from testinfra.modules.interface import Interface
-from testinfra.modules.mountpoint import MountPoint
-from testinfra.modules.package import Package
-from testinfra.modules.pip import PipPackage
-from testinfra.modules.process import Process
-from testinfra.modules.puppet import Facter
-from testinfra.modules.puppet import PuppetResource
-from testinfra.modules.salt import Salt
-from testinfra.modules.service import Service
-from testinfra.modules.socket import Socket
-from testinfra.modules.sudo import Sudo
-from testinfra.modules.supervisor import Supervisor
-from testinfra.modules.sysctl import Sysctl
-from testinfra.modules.systeminfo import SystemInfo
-from testinfra.modules.user import User
+import importlib
+import sys
 
 
-__all__ = [
-    "Command", "File", "Package", "Group", "Interface",
-    "Service", "SystemInfo", "User", "Salt", "PuppetResource",
-    "Facter", "Sysctl", "Socket", "Ansible", "Process",
-    "Supervisor", "MountPoint", "Sudo", "PipPackage",
-]
+def _import_modules():
+    modules = {
+        'PipPackage': __name__ + '.pip',
+        'Facter': __name__ + '.puppet',
+        'PuppetResource': __name__ + '.puppet',
+    }
+    for name in (
+        'Ansible', 'Command', 'File', 'Group', 'Interface', 'MountPoint',
+        'Package', 'Process', 'Salt', 'Service', 'Socket', 'Sudo',
+        'Supervisor', 'Sysctl', 'SystemInfo', 'User'
+    ):
+        modules[name] = __name__ + '.' + name.lower()
+    mod = sys.modules[__name__]
+    for name, modname in modules.items():
+        module = importlib.import_module(modname)
+        setattr(mod, name, getattr(module, name))
+    return modules.keys()
+
+__all__ = _import_modules()
