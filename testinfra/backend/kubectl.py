@@ -21,12 +21,12 @@ class KubectlBackend(base.BaseBackend):
     NAME = "kubectl"
 
     def __init__(self, name, *args, **kwargs):
-        self.name, self.user = self.parse_containerspec(name)
-        if "/" in self.name:
-            self.name, self.container = self.name.split("/", 1)
+        self._name, self._user = self.parse_containerspec(name)
+        if "/" in self._name:
+            self._name, self.container = self._name.split("/", 1)
         else:
             self.container = None
-        super(KubectlBackend, self).__init__(self.name, *args, **kwargs)
+        super(KubectlBackend, self).__init__(self._name, *args, **kwargs)
 
     def run(self, command, *args, **kwargs):
         cmd = self.get_command(command, *args)
@@ -34,10 +34,10 @@ class KubectlBackend(base.BaseBackend):
         # See https://github.com/kubernetes/kubernetes/issues/30656
         if self.container is None:
             out = self.run_local(
-                "kubectl exec %s -- /bin/sh -c %s", self.name, cmd)
+                "kubectl exec %s -- /bin/sh -c %s", self._name, cmd)
         else:
             out = self.run_local(
                 "kubectl exec %s -c %s -- /bin/sh -c %s",
-                self.name, self.container, cmd)
+                self._name, self.container, cmd)
         out.command = self.encode(cmd)
         return out

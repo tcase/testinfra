@@ -28,7 +28,7 @@ class AnsibleBackend(base.BaseBackend):
     HAS_RUN_ANSIBLE = True
 
     def __init__(self, host, ansible_inventory=None, *args, **kwargs):
-        self.host = host
+        self._host = host
         self.ansible_inventory = ansible_inventory
         self._ansible_runner = None
         super(AnsibleBackend, self).__init__(host, *args, **kwargs)
@@ -66,7 +66,7 @@ class AnsibleBackend(base.BaseBackend):
 
     def run_ansible(self, module_name, module_args=None, **kwargs):
         result = self.ansible_runner.run(
-            self.host, module_name, module_args,
+            self._host, module_name, module_args,
             **kwargs)
         logger.info(
             "RUN Ansible(%s, %s, %s): %s",
@@ -75,7 +75,7 @@ class AnsibleBackend(base.BaseBackend):
         return result
 
     def get_variables(self):
-        return self.ansible_runner.get_variables(self.host)
+        return self.ansible_runner.get_variables(self._host)
 
     @classmethod
     def get_hosts(cls, host, **kwargs):

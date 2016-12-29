@@ -28,9 +28,9 @@ class SaltBackend(base.BaseBackend):
     NAME = "salt"
 
     def __init__(self, host, *args, **kwargs):
-        self.host = host
+        self._host = host
         self._client = None
-        super(SaltBackend, self).__init__(self.host, *args, **kwargs)
+        super(SaltBackend, self).__init__(self._host, *args, **kwargs)
 
     @property
     def client(self):
@@ -45,12 +45,12 @@ class SaltBackend(base.BaseBackend):
                            out['stderr'])
 
     def run_salt(self, func, args=None):
-        out = self.client.cmd(self.host, func, args or [])
-        if self.host not in out:
+        out = self.client.cmd(self._host, func, args or [])
+        if self._host not in out:
             raise RuntimeError(
                 "Error while running %s(%s): %s. Minion not connected ?" % (
                     func, args, out))
-        return out[self.host]
+        return out[self._host]
 
     @classmethod
     def get_hosts(cls, host, **kwargs):

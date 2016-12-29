@@ -87,9 +87,9 @@ class BaseBackend(object):
 
     def __init__(self, hostname, sudo=False, sudo_user=None, *args, **kwargs):
         self._encoding = None
-        self.hostname = hostname
-        self.sudo = sudo
-        self.sudo_user = sudo_user
+        self._hostname = hostname
+        self._sudo = sudo
+        self._sudo_user = sudo_user
         super(BaseBackend, self).__init__()
 
     @classmethod
@@ -125,7 +125,7 @@ class BaseBackend(object):
             test.py::test[paramiko://server1] PASSED
             test.py::test[paramiko://server2] PASSED
         """
-        return self.hostname
+        return self._hostname
 
     def get_pytest_id(self):
         return self.get_connection_type() + "://" + self.get_hostname()
@@ -155,8 +155,8 @@ class BaseBackend(object):
 
     def get_command(self, command, *args):
         command = self.quote(command, *args)
-        if self.sudo:
-            command = self.get_sudo_command(command, self.sudo_user)
+        if self._sudo:
+            command = self.get_sudo_command(command, self._sudo_user)
         return command
 
     def run(self, command, *args, **kwargs):

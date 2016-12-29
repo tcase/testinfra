@@ -38,10 +38,10 @@ class ParamikoBackend(base.BaseBackend):
     NAME = "paramiko"
 
     def __init__(self, hostspec, ssh_config=None, *args, **kwargs):
-        self.host, self.user, self.port = self.parse_hostspec(hostspec)
-        self.ssh_config = ssh_config
+        self._host, self._user, self._port = self.parse_hostspec(hostspec)
+        self._ssh_config = ssh_config
         self._client = None
-        super(ParamikoBackend, self).__init__(self.host, *args, **kwargs)
+        super(ParamikoBackend, self).__init__(self._host, *args, **kwargs)
 
     @property
     def client(self):
@@ -49,16 +49,16 @@ class ParamikoBackend(base.BaseBackend):
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.WarningPolicy())
             cfg = {
-                "hostname": self.host,
-                "port": int(self.port) if self.port else 22,
-                "username": self.user,
+                "hostname": self._host,
+                "port": int(self._port) if self._port else 22,
+                "username": self._user,
             }
-            if self.ssh_config:
+            if self._ssh_config:
                 ssh_config = paramiko.SSHConfig()
-                with open(os.path.expanduser(self.ssh_config)) as f:
+                with open(os.path.expanduser(self._ssh_config)) as f:
                     ssh_config.parse(f)
 
-                for key, value in ssh_config.lookup(self.host).items():
+                for key, value in ssh_config.lookup(self._host).items():
                     if key == "hostname":
                         cfg[key] = value
                     elif key == "user":
